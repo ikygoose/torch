@@ -1,0 +1,3 @@
+local length = tonumber(read())
+local width = tonumber(read())
+function buildRectangle()
