@@ -1,0 +1,174 @@
+-- Variables and Constants
+local x, y, z, facing = 0, 0, 0, 0
+SOUTH, WEST, NORTH, EAST = 0, 1, 2, 3
+FORWARD, RIGHT, BACK, LEFT, DOWN, UP = 0, 1, 2, 3, 4, 5
+
+function getCords()
+  return x, y, z, facing
+end
+
+function setCords( X, Y, Z, FACING )
+  x, y, z, facing = X, Y, Z, FACING
+end
+
+function getX()
+  return x
+end
+
+function getY()
+  return y
+end
+
+function getZ()
+  return z
+end
+
+function getFacing()
+  return facing
+end
+
+function setX(X)
+  x = X
+end
+
+function setY(Y)
+  y = Y
+end
+
+function setZ(Z)
+  z = Z
+end
+
+function setFacing( FACING )
+  facing = FACING
+end
+
+-- turn the turtle right or left
+function turn( direction )
+  if direction == RIGHT then
+    facing = (facing + 1) % 4
+    turtle.turnRight()
+  end
+  if direction == LEFT then
+    facing = (facing - 1) % 4
+    turtle.turnLeft()
+  end
+end
+
+-- turn to a compass direction
+function turnTo( direction )
+  while facing ~= direction do
+    turn( RIGHT )
+  end
+end
+
+-- moves a distance in a relative direction
+-- returns false if unable to move the full distance
+function move( direction, distance )
+  local distanceMoved = 0
+
+  if direction == FORWARD then
+    while distanceMoved < distance and turtle.forward() do
+      if facing == SOUTH then
+        z = z + 1
+      elseif facing == NORTH then
+        z = z - 1
+      elseif facing == EAST then
+        x = x + 1
+      elseif facing == WEST then
+        x = x - 1
+      end
+      distanceMoved = distanceMoved + 1
+    end
+  elseif direction == UP then
+    while distanceMoved < distance and turtle.up() do
+      y = y + 1
+      distanceMoved = distanceMoved + 1
+    end
+  elseif direction == DOWN then
+    while distanceMoved < distance and turtle.down() do
+      y = y - 1
+      distanceMoved = distanceMoved + 1
+    end
+  elseif direction == BACK then
+    while distanceMoved < distance and turtle.back() do
+      if facing == SOUTH then
+        z = z - 1
+      elseif facing == NORTH then
+        z = z + 1
+      elseif facing == EAST then
+        x = x - 1
+      elseif facing == WEST then
+        x = x + 1
+      end
+      distanceMoved = distanceMoved + 1
+    end
+  end
+
+  return (distance == distanceMoved)
+end
+
+-- moves to a set of coordinates, priority is a list of axis
+-- returns false if fails to move
+function moveTo( X, Y, Z, priority )
+  for p = 1, #priority do
+    if priority[p] == "x" or priority[p] == "X" then
+      if X > x then
+        turnTo( WEST )
+      elseif X < x then
+        turnTo( EAST )
+      end
+      if  not move( FORWARD, math.abs( X - x ) ) then
+        return false
+      end
+    elseif priority[p] == "y"  or priority[p] == "Y" then
+      if Y > y then
+        if not move( UP, math.abs( Y - y ) ) then
+          return false
+        end
+      elseif Y < y then
+        if not move( DOWN, math.abs( Y - y ) ) then
+          return false
+        end
+      end
+    elseif priority[p] == "z"  or priority[p] == "Z" then
+      if Z > z then
+        turnTo( NORTH )
+      elseif Z < z then
+        turnTo( SOUTH )
+      end
+      if not move( FORWARD, math.abs( Z - z ) ) then
+        return false
+      end
+    end
+  end
+end
+
+-- uses GPS to orientate the turtle, will move at least once twice
+-- will fail if it can not move
+function locate()
+  local x1,y1,z1 = gps.locate()
+  
+  for num = 1,4 do
+    if turtle.forward() == true then
+      local x2,y2,z2 = gps.locate()
+      if x2 > x1 then
+        facing = east
+      elseif x2 < x1 then
+        facing = west
+      elseif z2 > z1 then
+        facing = south
+      elseif z2 < z1 then
+        facing = north
+      end
+      
+      x, y, z = x2, y2, z2
+      
+      return true
+    else
+      turtle.turnRight()
+    end
+  end
+  
+  return false
+end
