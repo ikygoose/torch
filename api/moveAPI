@@ -1,3 +1,4 @@
+-- pastebin get ituuJM73 moveAPI
 -- Variables and Constants
 local x, y, z, facing = 0, 0, 0, 0
 SOUTH, WEST, NORTH, EAST = 0, 1, 2, 3
