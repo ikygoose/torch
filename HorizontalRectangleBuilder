@@ -1,3 +1,28 @@
 local length = tonumber(read())
 local width = tonumber(read())
-function buildRectangle()
+local slot = 1
+local turnCondition = 0
+turtle.select(1)
+for i = 1, width
+    for j = 1, length
+        if turtle.getItemCount == 0 then
+            slot = slot + 1
+            turtle.select(slot)
+        end
+        turtle.placeDown()
+        turtle.forward()
+    end
+    if turnCondition == 0 then
+        turtle.turnRight()
+        turtle.forward()
+        turtle.turnRight()
+        turtle.forward()
+        turnCondition = 1
+    else
+        turtle.turnLeft()
+        turtle.forward()
+        turtle.turnLeft()
+        turtle.forward()
+        turnCondition = 0
+    end
+end
