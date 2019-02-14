@@ -1,30 +1,158 @@
-furnaces = 0
+efficiency = 8 --the amount of items each fuel item can smelt
+furnaces = 0 --the amount of furnaces the chef has (MAX 8)
+amounts = {}
+coal = 0
+fuel = 1
+timer = 10 -- the amount of time 1 item smelts
+cooktime = timer*efficiency
+data = turtle.getItemDetail()
 
-fucntion reset()
-    furnaces = 0
+for i, side in ipairs(rs.getSides()) do --#Loop for each side on the computer that redstone can be used, these can also be used by modems.
+if peripheral.getType(side) == 'modem' then --#Did we find a modem... Or some other peripheral?
+  print('Found Modem On Side '..side.."!")
+  rednet.open(side)
+  wireless = peripheral.wrap(side)
+  break --#Opened modem, dont open any others.
+end
+end
+function sendMessage(destination, message, protocol)
+if destination and message then
+  rednet.send(destination, message, protocol)
+end
 end
 
-function countFurnaces()
-    turtle.forward()
-    while turtle.inspect() == "furnace" do
-        furnaces = furnaces + 1
-        turtle.turnRight()
-        turtle.forward()
-        turtle.turnLeft()
-    end
-    turtle.turnLeft()
-    if furnaces > 0 do
-        for i = 1, furnaces do
-            turtle.forward()
-        end
-    end
-    turtle.turnLeft()
-    turtle.forward()
-    turtle.turnLeft()
-    turtle.turnLeft()
+function collectCoal()
+turtle.select(1)
+turtle.up()
+turtle.suck(coal)
 end
-
+function collectOre()
+turtle.up()
+for i = 2, furnaces+1 do
+  turtle.select(i)
+  turtle.suck(efficiency)
+end
+end
 function smelt()
-    countFurnacces()
-    
+for i = 2, furnaces+1 do
+  turtle.back()
+  turtle.select(i)
+  turtle.dropDown(efficiency)
+end
+term.clear()
+term.setCursorPos(1,1)
+sendMessage(3, "Going to add fuel to the furnaces...")
+for i = 1, furnaces do
+  turtle.forward()
+end
+turtle.down()
+turtle.down()
+turtle.select(1)
+for i = 2, furnaces+1 do
+  turtle.back()
+  turtle.dropUp(fuel)
+end
+for i = cooktime, 0, -1 do
+  term.clear()
+  term.setCursorPos(1,1)
+  sendMessage(3, "Time left to collect smeltables: " .. i)
+  sleep(1)
+end
+term.clear()
+term.setCursorPos(1,1)
+sendMessage(3, "Collecting all the smeltables")
+for i = 1, furnaces do
+  turtle.suckUp()
+  turtle.forward()
+end
+turtle.forward()
+term.clear()
+term.setCursorPos(1,1)
+sendMessage(3, "Putting all items in the Chest")
+for i = 1,16 do
+  turtle.select(i)
+  turtle.drop()
+end
+end
+
+term.clear()
+term.setCursorPos(1,1)
+sendMessage(3, "This is an auto ore smelter. If you didn't setup anything, you can follow the next steps to let the turtle build it for you.")
+sleep(4)
+term.setCursorPos(1,3)
+sendMessage(3, "Place up to 15 furnaces into slot 1")
+sleep(3)
+term.setCursorPos(1,4)
+sendMessage(3, "Place 6 chests into slot 2")
+sleep(3) term.setCursorPos(1,6)
+sendMessage(3, "Press 1 to build,  Press 2 to start immediately.")
+local event, key = os.pullEvent("key")
+if event == "1" then
+turtle.select(1)
+if turtle.getItemCount( turtle.getSelectedSlot() ) < 1 then
+
+else
+  turtle.select(1)
+  local data = turtle.getItemDetail()
+  furnaces = data.count
+  coal = data.count
+  sendMessage(3, "Building smelter structure")
+  for i = 1, furnaces do
+   turtle.back(i)
+   turtle.placeUp(1)
+  end
+  for i = 1, furnaces do
+   turtle.forward()
+  end
+  turtle.select(2)
+  turtle.place()
+  turtle.up()
+  turtle.place()
+  turtle.up()
+  turtle.place()
+  turtle.turnRight()
+  turtle.forward()
+  turtle.turnLeft()
+  turtle.place()
+  turtle.down()
+  turtle.place()
+  turtle.down()
+  turtle.place()
+  turtle.turnLeft()
+  turtle.forward()
+  turtle.turnRight()
+end
+else
+turtle.back()
+while turtle.inspectUp() ~= false do
+  furnaces = furnaces+1
+  coal = coal+1
+  turtle.back()
+  sendMessage(3, "Total of furnaces in this build: " .. furnaces)
+end
+for i = 1, furnaces+1 do
+  turtle.forward()
+end
+end
+while true do
+term.clear()
+term.setCursorPos(1,1)
+sendMessage(3, "Collecting Coal...")
+collectCoal()
+sleep(1)
+term.clear()
+term.setCursorPos(1,1)
+sendMessage(3, "Collecting Ores to smelt...")
+collectOre()
+sleep(1)
+term.clear()
+term.setCursorPos(1,1)
+sendMessage(3, "Going off to smelt all the Ores...")
+smelt()
+term.clear()
+term.setCursorPos(1,1)
+sendMessage(3, "All smelted ores are delivered")
+sleep(0,2)
+sendMessage(3, "Preparing to smelt next batch of Ores.....")
+sleep(5)
 end
