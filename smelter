@@ -1,0 +1,30 @@
+furnaces = 0
+
+fucntion reset()
+    furnaces = 0
+end
+
+function countFurnaces()
+    turtle.forward()
+    while turtle.inspect() == "furnace" do
+        furnaces = furnaces + 1
+        turtle.turnRight()
+        turtle.forward()
+        turtle.turnLeft()
+    end
+    turtle.turnLeft()
+    if furnaces > 0 do
+        for i = 1, furnaces do
+            turtle.forward()
+        end
+    end
+    turtle.turnLeft()
+    turtle.forward()
+    turtle.turnLeft()
+    turtle.turnLeft()
+end
+
+function smelt()
+    countFurnacces()
+    
+end
