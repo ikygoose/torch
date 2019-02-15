@@ -164,6 +164,8 @@ function locate()
       
       x, y, z = x2, y2, z2
       
+      turtle.back()
+      
       return true
     else
       turtle.turnRight()
