@@ -99,6 +99,9 @@ function search()
       turtle.dig()
       moveAPI.move( moveAPI.FORWARD, 1 )
       turtle.digDown()
+      
+      turtle.select( SAPLING_SLOT )
+      turtle.placeDown()
     
       task = CUTTING
       saveTurtleData()
@@ -120,9 +123,6 @@ function cut()
   end
 
   moveAPI.move( moveAPI.DOWN, i )
-  
-  turtle.select( SAPLING_SLOT )
-  turtle.placeDown()
   
   task = SEARCHING
   saveTurtleData()
@@ -165,6 +165,9 @@ end
 -- wait a set amount of time before continuing
 function wait()
   sleep( WAIT_TIME )
+  task = SEARCHING
+  saveTurtleData()
+  search()
 end
 
 -- main method
