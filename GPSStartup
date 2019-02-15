@@ -3,7 +3,7 @@ local x, y, z = 0, 0, 0
 local DATA_FILE = "position.data"
 
 function loadPositionData()
-  file = fs.load( DATA_FILE )
+  file = fs.open( DATA_FILE )
   
   local data = textutils.unserialize( DATA_FILE )
   
