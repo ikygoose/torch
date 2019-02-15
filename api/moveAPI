@@ -1,4 +1,3 @@
--- pastebin get ituuJM73 moveAPI
 -- Variables and Constants
 local x, y, z, facing = 0, 0, 0, 0
 SOUTH, WEST, NORTH, EAST = 0, 1, 2, 3
@@ -154,13 +153,13 @@ function locate()
     if turtle.forward() == true then
       local x2,y2,z2 = gps.locate()
       if x2 > x1 then
-        facing = east
+        facing = EAST
       elseif x2 < x1 then
-        facing = west
+        facing = WEST
       elseif z2 > z1 then
-        facing = south
+        facing = SOUTH
       elseif z2 < z1 then
-        facing = north
+        facing = NORTH
       end
       
       x, y, z = x2, y2, z2
