@@ -1,0 +1,53 @@
+local args = {...}
+
+function goodArgs()
+  if #args == 2 then
+    if args[1] == "up" or args[1] == "down" then
+      if tonumber(args[2])
+        args[2] = tonumber(args[2])
+        if args[2] > 0 and args[2] < 255 then
+          return true
+        end
+      end
+    end
+  end
+  return false
+end
+
+function staircaseUp(distance)
+  for i = 1, distance do
+    turtle.dig()
+    turtle.forward()
+    if not turtle.detectDown() then
+      turtle.placeDown()
+    end
+    turtle.digUp()
+    turtle.up()
+    turtle.digUp()
+    turtle.up()
+    turtle.down()
+  end
+end
+
+function staircaseDown(distance)
+  for i = 1, distance do
+    turtle.dig()
+    turtle.forward()
+    turtle.digUp()
+    turtle.digDown()
+    turtle.down()
+    if not turtle.detectDown() then
+      turtle.placeDown()
+    end
+  end
+end
+
+if goodArgs() then
+  if direction == "up" then
+    staircaseUp(args[2])
+  else
+    staircaseDown(args[2])
+  end
+else
+  print "Usage: staircase <direction> <distance>"
+end
