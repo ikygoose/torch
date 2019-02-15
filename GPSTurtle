@@ -71,7 +71,7 @@ end
 
 -- save the position data to the disk
 function writePositionData()
-  file = fs.open( DISK_PATH . DATA_FILE, "w" )
+  file = fs.open( DISK_PATH .. DATA_FILE, "w" )
   local data = { ["x"] = x, ["y"] = y, ["z"] = z }
   file.write( textutils.serialize( data ) )
   file.close()
