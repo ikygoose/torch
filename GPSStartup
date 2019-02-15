@@ -3,9 +3,9 @@ local x, y, z = 0, 0, 0
 local DATA_FILE = "position.data"
 
 function loadPositionData()
-  file = fs.open( DATA_FILE )
+  local file = fs.open( DATA_FILE, "r" )
   
-  local data = textutils.unserialize( DATA_FILE )
+  local data = textutils.unserialize( file.readAll() )
   
   file.close()
   
