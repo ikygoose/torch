@@ -94,6 +94,7 @@ function search()
     if turtle.detect() then
       turtle.dig()
       moveAPI.move( moveAPI.FORWARD, 1 )
+      turtle.digDown()
     
       task = CUTTING
       saveTurtleData()
