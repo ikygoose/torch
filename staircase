@@ -3,7 +3,7 @@ local args = {...}
 function goodArgs()
   if #args == 2 then
     if args[1] == "up" or args[1] == "down" then
-      if tonumber(args[2])
+      if tonumber(args[2]) then
         args[2] = tonumber(args[2])
         if args[2] > 0 and args[2] < 255 then
           return true
