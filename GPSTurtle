@@ -45,7 +45,7 @@ function install()
   turtle.suckUp()
 
   turtle.select( DISK_DRIVE_SLOT )
-  turtle.digTop()
+  turtle.digUp()
 end
 
 -- get position data from user or GPS
