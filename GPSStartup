@@ -17,7 +17,7 @@ end
 function start()
   loadPositionData()
   
-  shell.run( "GPS", "host", tostring(x), tostring(y), tostring(z) )
+  shell.run( "gps", "host", tostring(x), tostring(y), tostring(z) )
 end
 
 start()
