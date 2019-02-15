@@ -1,5 +1,5 @@
 function digLeft()
-  local success
+  local success = false
   
   turtle.turnLeft()
   success = turtle.dig()
@@ -9,7 +9,7 @@ function digLeft()
 end
 
 function digRight()
-  local success
+  local success = false
   
   turtle.turnRight()
   success = turtle.dig()
