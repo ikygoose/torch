@@ -142,6 +142,8 @@ function moveTo( X, Y, Z, priority )
       end
     end
   end
+  
+  return true
 end
 
 -- uses GPS to orientate the turtle, will move at least once twice
