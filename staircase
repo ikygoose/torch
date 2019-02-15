@@ -43,10 +43,12 @@ function staircaseDown(distance)
 end
 
 if goodArgs() then
-  if direction == "up" then
+  if args[1] == "up" then
     staircaseUp(args[2])
+    print "Staircasing..."
   else
     staircaseDown(args[2])
+    print "Staircasing..."
   end
 else
   print "Usage: staircase <direction> <distance>"
