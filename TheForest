@@ -138,6 +138,9 @@ function unload()
     turtle.dropDown()
   end
   
+  turtle.select(1)
+  turtle.suckDown()
+  
   turtle.select( SAPLING_SLOT )
   turtle.suckDown()
 
