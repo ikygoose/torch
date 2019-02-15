@@ -73,7 +73,7 @@ function findTreeLocations()
     for j = z, z + zWidth do
       moveAPI.moveTo( i, y, j, { "x","y","z" } )
       if turtle.detectDown() then
-        table.insert( data, { ["x"] = i, ["y"] = y, ["z"] = z } )
+        table.insert( data, { ["x"] = i, ["y"] = y, ["z"] = j } )
       end
     end
   end
@@ -92,6 +92,9 @@ function search()
     moveAPI.moveTo( treeLocations[i]["x"] - 1, treeLocations[i]["y"] + 1, treeLocations[i]["z"], { "y", "x", "z" } )
 
     if turtle.detect() then
+      turtle.dig()
+      moveAPI.move( moveAPI.FORWARD, 1 )
+    
       task = CUTTING
       saveTurtleData()
       cut()
@@ -112,6 +115,10 @@ function cut()
   end
 
   moveAPI.move( moveAPI.DOWN, i )
+  
+  turtle.select( SAPLING_SLOT )
+  turtle.placeDown()
+  
   task = SEARCHING
   saveTurtleData()
 end
@@ -124,6 +131,9 @@ function unload()
     turtle.select( i )
     turtle.dropDown()
   end
+  
+  turtle.select( SAPLING_SLOT )
+  turtle.suckDown()
 
   task = WAITING
   saveTurtleData()
