@@ -114,9 +114,9 @@ function moveTo( X, Y, Z, priority )
   for p = 1, #priority do
     if priority[p] == "x" or priority[p] == "X" then
       if X > x then
-        turnTo( WEST )
-      elseif X < x then
         turnTo( EAST )
+      elseif X < x then
+        turnTo( WEST )
       end
       if  not move( FORWARD, math.abs( X - x ) ) then
         return false
@@ -133,9 +133,9 @@ function moveTo( X, Y, Z, priority )
       end
     elseif priority[p] == "z"  or priority[p] == "Z" then
       if Z > z then
-        turnTo( NORTH )
-      elseif Z < z then
         turnTo( SOUTH )
+      elseif Z < z then
+        turnTo( NORTH )
       end
       if not move( FORWARD, math.abs( Z - z ) ) then
         return false
