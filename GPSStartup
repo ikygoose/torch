@@ -1,0 +1,23 @@
+local x, y, z = 0, 0, 0
+
+local DATA_FILE = "position.data"
+
+function loadPositionData()
+  file = fs.load( DATA_FILE )
+  
+  local data = textutils.unserialize( DATA_FILE )
+  
+  file.close()
+  
+  x = data["x"]
+  y = data["y"]
+  z = data["z"]
+end
+
+function start()
+  loadPositionData()
+  
+  shell.run( "GPS", "host", tostring(x), tostring(y), tostring(z) )
+end
+
+start()
