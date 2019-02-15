@@ -1,0 +1,19 @@
+function digLeft()
+  local success
+  
+  turtle.turnLeft()
+  success = turtle.dig()
+  turtle.turnRight()
+  
+  return success
+end
+
+function digRight()
+  local success
+  
+  turtle.turnRight()
+  success = turtle.dig()
+  turtle.turnLeft()
+  
+  return success
+end
