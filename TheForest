@@ -58,7 +58,7 @@ function findTreeLocations()
   print( "Enter X width of tree farm: " )
   local xWidth = tonumber( read() )
 
-  print( "Enter X width of tree farm: " )
+  print( "Enter Z width of tree farm: " )
   local zWidth = tonumber( read() )
 
   local data = {}
@@ -154,6 +154,7 @@ end
 
 -- main method
 function start()
+  os.loadAPI( "moveAPI" )
   loadTurtleData()
   moveAPI.locate()
   refuel()
