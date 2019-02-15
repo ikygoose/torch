@@ -89,8 +89,12 @@ end
 function search()
   for i = 1, #treeLocations do
     refuel()
-    moveAPI.moveTo( treeLocations[i]["x"] - 1, treeLocations[i]["y"] + 1, treeLocations[i]["z"], { "y", "x", "z" } )
+    while not moveAPI.moveTo( treeLocations[i]["x"] - 1, treeLocations[i]["y"] + 1, treeLocations[i]["z"], { "y", "x", "z" } ) do
+      turtle.attack()
+      turtle.dig()
+    end
 
+    moveAPI.turnTo( moveAPI.EAST )
     if turtle.detect() then
       turtle.dig()
       moveAPI.move( moveAPI.FORWARD, 1 )
