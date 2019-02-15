@@ -115,6 +115,7 @@ end
 
 -- tree cutting task
 function cut()
+  turtle.select(1)
   local i = 0
   while turtle.detectUp() do
     turtle.digUp()
