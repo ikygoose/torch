@@ -1,0 +1,173 @@
+local TREE_DATA_FILE = "trees.data"
+local TURTLE_DATA_FILE = "turtle.data"
+
+local SAPLING_SLOT = 16
+local MINIMUM_FUEL = 100
+local WAIT_TIME = 60 * 5
+
+local CUTTING = 1
+local SEARCHING = 2
+local UNLOADING = 3
+local WAITING = 4
+
+local treeLocations = {}
+local dropOffLocation = { ["x"] = 0, ["y"] = 0, ["z"] = 0 }
+
+local task = 0
+
+-- save the turtle's data
+function saveTurtleData()
+  local file = fs.open( TURTLE_DATA_FILE, "w" )
+
+  file.write( textutils.serialize( { ["dropOffLocation"] = dropOffLocation, ["task"] = task } ) )
+
+  file.close()
+end
+
+-- load the turtle's data, ask for input of no data is found
+function loadTurtleData()
+  if not fs.exists( TURTLE_DATA_FILE ) then
+    print( "Enter drop off location's X position: " )
+    dropOffLocation["x"] = tonumber( read() )
+    print( "Enter drop off location's Y position: " )
+    dropOffLocation["y"] = tonumber( read() )
+    print( "Enter drop off location's Z position: " )
+    dropOffLocation["z"] = tonumber( read() )
+
+    task = SEARCHING
+    saveTurtleData()
+  else
+    local file = fs.open( TURTLE_DATA_FILE, "r" )
+    local data = textutils.unserialize( file.readAll() )
+    dropOffLocation = data["dropOffLocation"]
+    task = data["task"]
+    file.close()
+  end
+  
+  if not fs.exists( TREE_DATA_FILE ) then
+    findTreeLocations()
+  else
+    file = fs.open( TREE_DATA_FILE, "r" )
+    treeLocations = textutils.unserialize( file.readAll() )
+    file.close()
+  end
+end
+
+-- generates a table of tree locations
+function findTreeLocations()
+  print( "Enter X width of tree farm: " )
+  local xWidth = tonumber( read() )
+
+  print( "Enter X width of tree farm: " )
+  local zWidth = tonumber( read() )
+
+  local data = {}
+
+  local x, y, z = gps.locate()
+
+  moveAPI.locate()
+
+  moveAPI.moveTo( x, y, z, { "x","y","z" } )
+
+  for i = x, x + xWidth do
+    for j = z, z + zWidth do
+      moveAPI.moveTo( i, y, j, { "x","y","z" } )
+      if turtle.detectDown() then
+        table.insert( data, { ["x"] = i, ["y"] = y, ["z"] = z } )
+      end
+    end
+  end
+
+  local file = fs.open( TREE_DATA_FILE, "w" )
+
+  file.write( textutils.serialize( data ) )
+
+  file.close()
+end
+
+-- search task, finds trees to cut
+function search()
+  for i = 1, #treeLocations do
+    refuel()
+    moveAPI.moveTo( treeLocations[i]["x"] - 1, treeLocations[i]["y"] + 1, treeLocations[i]["z"], { "y", "x", "z" } )
+
+    if turtle.detect() then
+      task = CUTTING
+      saveTurtleData()
+      cut()
+    end
+  end
+
+  task = UNLOADING
+  unload()
+end
+
+-- tree cutting task
+function cut()
+  local i = 0
+  while turtle.detectUp() do
+    turtle.digUp()
+    moveAPI.move( moveAPI.UP, 1 )
+    i = i + 1
+  end
+
+  moveAPI.move( moveAPI.DOWN, i )
+  task = SEARCHING
+  saveTurtleData()
+end
+
+-- moves to and unloads logs
+function unload()
+  refuel()
+  moveAPI.moveTo( dropOffLocation["x"], dropOffLocation["y"] + 1, dropOffLocation["z"], { "x", "z", "y" } )
+  for i = 1,15 do
+    turtle.select( i )
+    turtle.dropDown()
+  end
+
+  task = WAITING
+  saveTurtleData()
+  wait()
+
+  task = SEARCHING
+  saveTurtleData()
+  search()
+end
+
+-- will try to refuel until a minimum is met
+function refuel()
+  local i = 1
+  turtle.select( i )
+
+  while turtle.getFuelLevel() < MINIMUM_FUEL do
+    if not turtle.refuel( 1 ) then
+      i = ( (i + 1) % 15 ) + 1
+      turtle.select( i )
+    end
+  end
+end
+
+-- wait a set amount of time before continuing
+function wait()
+  sleep( WAIT_TIME )
+end
+
+-- main method
+function start()
+  loadTurtleData()
+  moveAPI.locate()
+  refuel()
+
+  if task == SEARCHING then
+    search()
+  elseif task == CUTTING then
+    cut()
+    search()
+  elseif task == UNLOADING then
+    unload()
+  elseif task == WAITING then
+    wait()
+  end
+end
+
+start()
