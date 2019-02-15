@@ -1,0 +1,94 @@
+local x, y, z = 0, 255, 0
+local COMPUTER_SLOT = 1
+local MODEM_SLOT = 2
+local DISK_DRIVE_SLOT = 3
+local DISK_SLOT = 4
+local DATA_FILE = "position.data"
+local DISK_PATH = "disk/"
+
+-- install GPS computer
+function install()
+  turtle.select( COMPUTER_SLOT )
+  turtle.down()
+  turtle.placeUp()
+  turtle.back()
+  turtle.up()
+
+  turtle.select( MODEM_SLOT )
+  turtle.back()
+  turtle.place()
+
+  turtle.select( DISK_DRIVE_SLOT )
+  turtle.turnLeft()
+  turtle.forward()
+  turtle.turnRight()
+  turtle.forward()
+  turtle.place()
+
+  turtle.select( DISK_SLOT )
+  turtle.drop()
+
+  writePositionData()
+
+  turtle.down()
+  turtle.turnRight()
+  turtle.forward()
+  turtle.turnLeft()
+  turtle.forward()
+
+  computer = peripheral.wrap( "top" )
+  computer.turnOn()
+
+  turtle.turnLeft()
+  turtle.forward()
+  turtle.select( DISK_SLOT )
+  turtle.suckUp()
+
+  turtle.select( DISK_DRIVE_SLOT )
+  turtle.digTop()
+end
+
+-- get position data from user or GPS
+function getPositionData()
+  local y1 = 0
+
+  print( "Locate GPS from existing network? (y/n): " )
+
+  local input = read()
+  if input == "y" or input == "Y" then
+
+    print( "Will use existing GPS network." )
+
+    x, y1, z = GPS.locate()
+
+  else
+    print( "Enter X position: " )
+    x = tonumber( read() )
+    print( "Enter Z position: " )
+    z = tonumber( read() )
+  end
+end
+
+-- save the position data to the disk
+function writePositionData()
+  file = fs.open( DISK_PATH . DATA_FILE, "w" )
+  local data = { ["x"] = x, ["y"] = 255, ["z"] = z }
+  file.write( textutils.serialize( data ) )
+  file.close()
+end
+
+-- start the install process
+function start()
+  getPositionData()
+
+  while turtle.up() do
+  end
+
+  install()
+
+  while turtle.down() do
+  end
+
+end
+
+start()
