@@ -90,7 +90,7 @@ function start()
   while turtle.up() do
   end
 
-  for i = 0, offset do
+  for i = 0, yOffset do
     turtle.down()
   end
 
