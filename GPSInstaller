@@ -1,0 +1,14 @@
+local DATA_FILE = "position.data"
+local STARTUP_FILE = "startup"
+local STARTUP_PROGRAM_PATH = "GPSStartup"
+local DISK_PATH = "disk/"
+
+function install()
+  if fs.exists( DISK_PATH . DATA_PATH ) then
+    fs.copy( DISK_PATH . DATA_PATH, DATA_FILE )
+    fs.copy( DISK_PATH . STARTUP_PROGRAM_PATH, STARTUP_FILE )
+  end
+end
+
+install()
+os.reboot()
