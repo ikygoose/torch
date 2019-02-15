@@ -118,7 +118,7 @@ function moveTo( X, Y, Z, priority )
       elseif X < x then
         turnTo( WEST )
       end
-      if  not move( FORWARD, math.abs( X - x ) ) then
+      if not move( FORWARD, math.abs( X - x ) ) then
         return false
       end
     elseif priority[p] == "y"  or priority[p] == "Y" then
@@ -162,9 +162,8 @@ function locate()
         facing = NORTH
       end
       
-      x, y, z = x2, y2, z2
-      
       turtle.back()
+      x, y, z = x1, y1, z1
       
       return true
     else
