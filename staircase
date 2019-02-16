@@ -74,10 +74,12 @@ local function staircaseDown(distance)
 end
 
 local function spiralUp(distance, diameter)
+  local counter = 1
   for i = 1, distance do
     -- turn turtle after reaching corner
-    if diameter / i == 1 then
+    if counter == diameter then
       turtle.turnRight()
+      counter = 0
     end
     
     turtle.dig()
@@ -93,14 +95,18 @@ local function spiralUp(distance, diameter)
     turtle.digUp()
     turtle.up()
     turtle.down()
+    
+    counter = counter + 1
   end
 end
 
 local function spiralDown(distance, diameter)
+  local counter = 1
   for i = 1, distance do
     -- turn turtle after reaching corner
-    if diameter / i == 1 then
+    if counter == diameter then
       turtle.turnLeft()
+      counter = 0
     end
     
     turtle.dig()
@@ -113,6 +119,8 @@ local function spiralDown(distance, diameter)
     if not turtle.detectDown() then
       turtle.placeDown()
     end
+    
+    counter = counter + 1
   end
 end
 
