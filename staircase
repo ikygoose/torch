@@ -77,7 +77,30 @@ local function spiralUp(distance, diameter)
   for i = 1, distance do
     -- turn turtle after reaching corner
     if diameter / i == 0 then
-    turtle.turnRight()
+      turtle.turnRight()
+    end
+    
+    turtle.dig()
+    turtle.forward()
+    
+    -- ensures staircase continuity
+    if not turtle.detectDown() then
+      turtle.placeDown()
+    end
+    
+    turtle.digUp()
+    turtle.up()
+    turtle.digUp()
+    turtle.up()
+    turtle.down()
+  end
+end
+
+local function spiralDown(distance, diameter)
+  for i = 1, distance do
+    -- turn turtle after reaching corner
+    if diameter / i == 0 then
+      turtle.turnLeft()
     end
     
     turtle.dig()
@@ -90,29 +113,6 @@ local function spiralUp(distance, diameter)
     if not turtle.detectDown() then
       turtle.placeDown()
     end
-  end
-end
-
-local function spiralDown(distance, diameter)
-  for i = 1, distance do
-    -- turn turtle after reaching corner
-    if diameter / i == 0 then
-    turtle.turnLeft()
-    end
-    
-    turtle.dig()
-    turtle.forward()
-    
-    -- ensures staircase continuity
-    if not turtle.detectDown() then
-      turtle.placeDown()
-    end
-    
-    turtle.digUp()
-    turtle.up()
-    turtle.digUp()
-    turtle.up()
-    turtle.down()
   end
 end
 
