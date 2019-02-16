@@ -1,11 +1,12 @@
 -- program arguments
--- expected format: <direction> <distance>
+-- regular staircase expected input: <direction> <distance>
+-- spiral staircase expected input: <direction> <distance> <diameter>
 local args = {...}
 
 -- checks validity of arguments
 local function goodArgs()
-  -- checks for corect number of arguments
-  if #args == 2 then
+  -- checks for correct number of arguments
+  if #args == 2 or #args == 3 then
     -- validates direction argument
     if args[1] == "up" or args[1] == "down" then
       -- checks that second argument is a number
@@ -13,8 +14,22 @@ local function goodArgs()
         -- replaces string value with number value
         args[2] = tonumber(args[2])
         -- checks that second argument is within bounds
-        if args[2] > 0 and args[2] < 255 then
-          return true
+        if args[2] > 0 and args[2] <= 255 then
+          -- validate third argument if any
+          if #args == 3 then
+            -- checks that third argument is a number
+            if tonumber(args[3]) then
+              -- replaces string value with number value
+              args[3] = tonumber(args[3])
+              -- checks that third argument is within bounds
+              if args[3] >= 2 and args[2] < 255 then
+                -- return validity and number of argumnets
+                return true, 3
+              end
+            end
+          end
+          -- return validity and number of argumnets
+          return true, 2
         end
       end
     end
@@ -58,18 +73,69 @@ local function staircaseDown(distance)
   end
 end
 
+local function spiralUp(distance, diameter)
+  for i = 1, distance do
+    -- turn turtle after reaching corner
+    if diameter / i == 0 then
+    turtle.turnRight()
+    end
+    
+    turtle.dig()
+    turtle.forward()
+    turtle.digUp()
+    turtle.digDown()
+    turtle.down()
+    
+    -- ensures staircase continuity
+    if not turtle.detectDown() then
+      turtle.placeDown()
+    end
+  end
+end
+
+local function spiralDown(distance, diameter)
+  for i = 1, distance do
+    -- turn turtle after reaching corner
+    if diameter / i == 0 then
+    turtle.turnLeft()
+    end
+    
+    turtle.dig()
+    turtle.forward()
+    
+    -- ensures staircase continuity
+    if not turtle.detectDown() then
+      turtle.placeDown()
+    end
+    
+    turtle.digUp()
+    turtle.up()
+    turtle.digUp()
+    turtle.up()
+    turtle.down()
+  end
+end
+
 -- runs program
 local function main()
   if goodArgs() then
-    if args[1] == "up" then
+    print "Staircasing..."
+    
+    -- execute correct function
+    if args[1] == "up" and #args == 2 then
       staircaseUp(args[2])
-      print "Staircasing..."
-    else
+    end
+    if args[1] == "down" and #args == 2 then
       staircaseDown(args[2])
-      print "Staircasing..."
+    end
+    if args[1] == "up" and #args == 3 then
+      spiralUp(args[2], args[3])
+    end
+    if args[1] == "down" and #args == 3 then
+      spiralDown(args[2], args[3])
     end
   else
-    print "Usage: staircase <direction> <distance>"
+    print "Usage: staircase <direction> <distance> <diameter>"
   end
 end
 
