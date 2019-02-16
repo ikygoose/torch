@@ -135,6 +135,7 @@ local function main()
       spiralDown(args[2], args[3])
     end
   else
+    print "Usage: staircase <direction> <distance>"
     print "Usage: staircase <direction> <distance> <diameter>"
   end
 end
