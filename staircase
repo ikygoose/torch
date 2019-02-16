@@ -76,7 +76,7 @@ end
 local function spiralUp(distance, diameter)
   for i = 1, distance do
     -- turn turtle after reaching corner
-    if diameter / i == 0 then
+    if diameter / i == 1 then
       turtle.turnRight()
     end
     
@@ -99,7 +99,7 @@ end
 local function spiralDown(distance, diameter)
   for i = 1, distance do
     -- turn turtle after reaching corner
-    if diameter / i == 0 then
+    if diameter / i == 1 then
       turtle.turnLeft()
     end
     
