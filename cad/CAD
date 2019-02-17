@@ -59,7 +59,6 @@ end
 -- begins the program main loop
 function start()
   load()
-  build:addLayer( Layer.Layer:new( build.currentLayer ) )
 
   while true do
     if not build:hasLayer( build.currentLayer ) then
