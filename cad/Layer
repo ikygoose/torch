@@ -1,0 +1,43 @@
+Layer = { blocks = {}, y = 0 }
+
+-- creates new layer table
+function Layer:new( Y )
+  local object = {}
+  setmetatable( object, self )
+  self.__index = self
+  object.y = Y;
+  return object
+end
+
+-- add block to layer
+function Layer:add( block )
+  table.insert( self.blocks, block )
+end
+
+-- remove any block at a given x and y coordinate pair
+function Layer:remove( x, z )
+  for i = 1, #self.blocks do
+    if x == self.blocks[i].x and z == self.blocks[i].z then
+      table.remove( self.blocks, i )
+      break
+    end
+  end
+end
+
+-- get the full block data at an index
+function Layer:getBlock( index )
+  local block = self.blocks[ index ]
+  block.y = self.y
+  return block
+end
+
+-- clone a layer and set its y
+function clone( y )
+  local cloneLayer = Layer:new( y )
+  
+  for i = 1, #self.blocks do
+    cloneLayer.add( self.blocks[ i ] )
+  end
+  
+  return cloneLayer
+end
