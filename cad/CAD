@@ -71,7 +71,7 @@ function start()
     if event == "mouse_click" then
 
       if button == 1 then
-        layer:add( { x = cameraX + eventX, z = cameraY + eventY, slot = currentSlot } )
+        layer:add( { x = eventX - cameraX, z = eventY - cameraY, slot = currentSlot } )
       elseif button == 2 then
         layer:remove( cameraX + eventX, cameraY + eventY )
       end
@@ -113,3 +113,5 @@ function start()
     end
   end
 end
+
+start()
