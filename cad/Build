@@ -1,8 +1,8 @@
-Build = { layers = {}, currentLayer = 0 }
+Build = {}
 
 -- creates new build table
 function Build:new()
-  local object = {}
+  local object = { layers = {}, currentLayer = 0 }
   setmetatable( object, self )
   self.__index = self
   return object
