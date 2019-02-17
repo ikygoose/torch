@@ -51,7 +51,7 @@ function Build:sort()
   for i = 1, #self.layers do
   
     local lowestIndex = i
-    local lowestY = #self.layers[ i ].y
+    local lowestY = self.layers[ i ].y
     
     for j = i + 1, #self.layers do
       if self.layers[ j ].y < lowestY then
