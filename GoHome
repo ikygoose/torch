@@ -2,12 +2,15 @@ os.loadAPI("moveAPI")
 
 moveAPI.locate()
 
-while not moveAPI.moveTo( moveAPI.getX(), 255, moveAPI.getZ(), { "y", "x", "z" } ) do
+print("Enter traveling height: ")
+height = tonumber( read() )
+
+while not moveAPI.moveTo( moveAPI.getX(), height, moveAPI.getZ(), { "y", "x", "z" } ) do
   turtle.digUp()
   turtle.attackUp()
 end
 
-while not moveAPI.moveTo( 205, 255, 460, { "x", "z", "y" } ) do
+while not moveAPI.moveTo( 205, height, 460, { "x", "z", "y" } ) do
   turtle.dig()
   turtle.attack()
 end
