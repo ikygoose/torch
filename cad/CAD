@@ -3,7 +3,7 @@ local FOREGROUND_COLOR = colors.white;
 local SAVE_FILE = "build.data"
 local cameraX, cameraY = 0, 0
 local currentSlot = 1
-local build = Build.Build:new()
+local build
 local A, B, C, D, E, F = 30, 48, 46, 32, 18, 33
 local S = 31
 local UP, DOWN, RIGHT, LEFT = 200, 208, 203, 205
@@ -15,6 +15,7 @@ local X = 45
 function load()
   os.loadAPI("Layer")
   os.loadAPI("Build")
+  build = Build.Build:new()
 end
 
 -- save the build as a table of blocks
