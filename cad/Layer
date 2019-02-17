@@ -1,8 +1,8 @@
-Layer = { blocks = {}, y = 0 }
+Layer = {}
 
 -- creates new layer table
 function Layer:new( Y )
-  local object = {}
+  local object = { blocks = {}, y = 0 }
   setmetatable( object, self )
   self.__index = self
   object.y = Y;
@@ -31,8 +31,8 @@ function Layer:remove( x, z )
 end
 
 -- get the full block data at an index
-function Layer:getBlock( index )
-  local block = self.blocks[ index ]
+function Layer:getBlock( i )
+  local block = self.blocks[ i ]
   block.y = self.y
   return block
 end
