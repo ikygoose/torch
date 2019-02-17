@@ -48,6 +48,12 @@ end
 -- display the current layer
 function display( layer )
   term.clear()
+  
+  term.setCursorPos( cameraX, cameraY )
+  term.setTextColor( FOREGROUND_COLOR )
+  term.setBackgroundColor( BACKGROUND_COLOR )
+  term.write("+")  
+  
   for i = 1, #layer.blocks do
     term.setCursorPos( layer.blocks[i].x + cameraX, layer.blocks[i].z + cameraY )
     term.setTextColor( FOREGROUND_COLOR )
