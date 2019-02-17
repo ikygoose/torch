@@ -11,6 +11,12 @@ end
 
 -- add block to layer
 function Layer:add( block )
+  for i = 1, #self.blocks do
+    if block.x == self.blocks[i].x and block.z == self.blocks[i].z then
+      return
+    end
+  end
+
   table.insert( self.blocks, block )
 end
 
