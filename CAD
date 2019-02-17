@@ -1,0 +1,114 @@
+local BACKGROUND_COLOR = colors.black;
+local FOREGROUND_COLOR = colors.white;
+local SAVE_FILE = "build.data"
+local cameraX, cameraY = 0, 0
+local currentSlot = 1
+local build = Build.Build:new()
+local A, B, C, D, E, F = 30, 48, 46, 32, 18, 33
+local S = 31
+local UP, DOWN, RIGHT, LEFT = 200, 208, 203, 205
+local PAGE_UP, PAGE_DOWN = 201, 209
+local X = 45
+
+
+-- load other files
+function load()
+  os.loadAPI("Layer")
+  os.loadAPI("Build")
+end
+
+-- save the build as a table of blocks
+function save()
+  build:sort()
+  local blocks = build:createBlockList()
+  file = fs.open( SAVE_FILE, "w" )
+  file.write( textutils.serialize( blocks ) )
+  file.close()
+end
+
+function slotToString( slot )
+  if slot >= 1 or slot <= 10 then
+    return tostring( slot - 1 )
+  elseif slot == 11 then
+    return "a"
+  elseif slot == 12 then
+    return "b"
+  elseif slot == 13 then
+    return "c"
+  elseif slot == 14 then
+    return "d"
+  elseif slot == 15 then
+    return "e"
+  elseif slot == 16 then
+    return "f"
+  end
+end
+
+-- display the current layer
+function display( layer )
+  for i = 1, #layer.blocks do
+    term.setCursorPos( layer.blocks[i].x - cameraX, layer.blocks[i].z - cameraY )
+    term.blit( slotToString( layer.blocks[i].slot ), FOREGROUND_COLOR, BACKGROUND_COLOR )
+  end
+end
+
+-- begins the program main loop
+function start()
+  load()
+  build:addLayer( 0 )
+
+  while true do
+    if not build:hasLayer( build.currentLayer ) then
+      build:addLayer( Layer.Layer:new( build.currentLayer ) )
+    end
+    
+    local layer = build:getCurrentLayer()
+    display( layer )
+    
+    local event, button, eventX, eventY = os.pullEvent()
+
+    if event == "mouse_click" then
+
+      if button == 1 then
+        layer:add( { x = cameraX + eventX, z = cameraY + eventY, slot = currentSlot } )
+      elseif button == 2 then
+        layer:remove( cameraX + eventX, cameraY + eventY )
+      end
+
+    elseif event == "key" then
+      if button == 11 then
+        currentSlot = 1
+      elseif button >= 2 and button <= 10 then
+        currentSlot = button
+      elseif button == A  then
+        currentSlot = 11
+      elseif button == B  then
+        currentSlot = 12
+      elseif button == C  then
+        currentSlot = 13
+      elseif button == D  then
+        currentSlot = 14
+      elseif button == E  then
+        currentSlot = 15
+      elseif button == F  then
+        currentSlot = 16
+      elseif button == S then
+        save()
+      elseif button == X then
+        error()
+      elseif button == UP then
+        cameraY = cameraY + 1
+      elseif button == DOWN then
+        cameraY = cameraY - 1
+      elseif button == RIGHT then
+        cameraX = cameraX + 1
+      elseif button == LEFT then
+        cameraX = cameraX - 1
+      elseif button == PAGE_UP then
+        build.currentLayer = build.currentLayer + 1
+      elseif button == PAGE_DOWN then  
+        build.currentLayer = build.currentLayer - 1
+      end
+    end
+  end
+end
