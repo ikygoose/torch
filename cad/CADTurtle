@@ -1,0 +1,46 @@
+os.loadAPI("moveAPI")
+
+local tArgs = {...}
+
+if #tArgs == 0 then
+  print("usage: CADTurtle <build file>")
+end
+
+if not fs.exists( tArgs[1] ) then
+  print("file: " .. tArgs[1] .. " not found!")
+  error()
+end
+
+local blocks
+
+-- load build data from file
+function load()
+  file = fs.open( tArgs[1], "r" )
+  
+  data = textutils.unserialize( file.readAll() )
+  
+  file.close()
+end
+
+-- start the build
+function start()
+  load()
+  moveAPI.locate()
+  local startingX, startingY, startingZ, startingFacing = moveAPI.getCords()
+
+  for i = 1, #blocks do
+    while not moveAPI.moveTo( startingX + blocks[i].x, startingY + blocks[i].y, startingZ + blocks[i].z, { "y","x","z" } ) do
+    end
+    
+    turtle.select( blocks[i].slot )
+    while turtle.getItemCount( blocks[i].slot ) <= 0 do
+      print("Place more blocks inside this slot!")
+      sleep(5)
+    end
+    
+    turtle.placeDown()
+    
+  end
+end
+
+start()
