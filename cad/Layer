@@ -2,10 +2,11 @@ Layer = {}
 
 -- creates new layer table
 function Layer:new( Y )
-  local object = { blocks = {}, y = 0 }
+  local object = {}
   setmetatable( object, self )
   self.__index = self
   object.y = Y;
+  object.blocks = {}
   return object
 end
 
@@ -42,7 +43,7 @@ function clone( y )
   local cloneLayer = Layer:new( y )
   
   for i = 1, #self.blocks do
-    cloneLayer.add( self.blocks[ i ] )
+    cloneLayer:add( self.blocks[ i ] )
   end
   
   return cloneLayer
