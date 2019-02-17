@@ -28,7 +28,7 @@ function save()
 end
 
 function slotToString( slot )
-  if slot >= 1 or slot <= 10 then
+  if slot >= 1 and slot <= 10 then
     return tostring( slot - 1 )
   elseif slot == 11 then
     return "a"
