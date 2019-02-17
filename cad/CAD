@@ -7,7 +7,7 @@ local build
 local A, B, C, D, E, F = 30, 48, 46, 32, 18, 33
 local S = 31
 local UP, DOWN, RIGHT, LEFT = 200, 208, 203, 205
-local PAGE_UP, PAGE_DOWN = 201, 209
+local PAGE_UP, PAGE_DOWN = 78, 74
 local X = 45
 
 
@@ -76,7 +76,7 @@ function start()
       if button == 1 then
         layer:add( { x = eventX - cameraX, z = eventY - cameraY, slot = currentSlot } )
       elseif button == 2 then
-        layer:remove( cameraX + eventX, cameraY + eventY )
+        layer:remove( eventX - cameraX, eventY - cameraY )
       end
 
     elseif event == "key" then
