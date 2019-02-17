@@ -47,9 +47,12 @@ end
 
 -- display the current layer
 function display( layer )
+  term.clear()
   for i = 1, #layer.blocks do
     term.setCursorPos( layer.blocks[i].x - cameraX, layer.blocks[i].z - cameraY )
-    term.blit( slotToString( layer.blocks[i].slot ), FOREGROUND_COLOR, BACKGROUND_COLOR )
+    term.setTextColor( FOREGROUND_COLOR )
+    term.setBackgroundColor( BACKGROUND_COLOR )
+    term.write( slotToString( layer.blocks[i].slot ) )
   end
 end
 
