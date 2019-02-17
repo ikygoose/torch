@@ -7,7 +7,7 @@ local build
 local A, B, C, D, E, F = 30, 48, 46, 32, 18, 33
 local S = 31
 local UP, DOWN, RIGHT, LEFT = 200, 208, 203, 205
-local PAGE_UP, PAGE_DOWN = 51, 52
+local PAGE_UP, PAGE_DOWN = 52, 51
 local X = 45
 
 
