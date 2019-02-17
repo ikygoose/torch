@@ -1,0 +1,100 @@
+Build = { layers = {}, currentLayer = 0 }
+
+-- creates new build table
+function Build:new()
+  local object = {}
+  setmetatable( object, self )
+  self.__index = self
+  return object
+end
+
+-- add block to layer
+function Build:addLayer( layer )
+  table.insert( self.layers, layer )
+end
+
+-- remove any block at x and y coordinates
+function Build:removeLayer( y )
+  for i = 1, #self.layers do
+    if y == self.layers[i].y then
+      table.remove( self.blocks, i )
+      break
+    end
+  end
+end
+
+-- return a layer at a given layer or return nil
+function Build:getLayer( y )
+  for i = 1, #self.layers do
+    if y == self.layers[i].y then
+      return layers[i]
+    end
+  end
+  
+  return nil
+end
+
+-- create a table of all the blocks in the build
+function Build:createBlockList()
+  local blocks = {}
+  for i = 1, #self.layers do
+    for j = 1, #self.layers[i].blocks do
+      table.insert( blocks, self.layers[i].getBlock( j ) )
+    end
+  end
+  
+  return blocks
+end
+
+-- sorts the build layers
+function Build:sort()
+  for i = 1, #self.layers do
+  
+    local lowestIndex = i
+    local lowestY = #self.layers[ i ].y
+    
+    for j = i + 1, #self.layers do
+      if self.layers[ j ].y < lowestY then
+        lowestIndex = j
+        lowestY = self.layers[ j ].y
+      end
+    end
+    
+    local var = self.layers[ i ]
+    self.layers[i] = self.layers[ lowestIndex ]
+    self.layers[ lowestIndex ] = var
+  end
+end
+
+-- clone a layer and set its y
+function Build:cloneLayer( y, newY )
+  local layer = self:getLayer( y )
+  return layer.clone( newY )
+end
+
+-- return the current layer
+function Build:getCurrentLayer()
+  for i = 1, #self.layers do
+    if self.currentLayer == self.layers[ i ].y then
+      return self.layers[ i ]
+    end
+  end
+  
+  return nil
+end
+
+-- sets the current layer
+function Build:setCurrentLayer( y )
+  self.currentLayer = y
+end
+
+-- check if a layer exists
+function Build:hasLayer( y )
+  for i = 1, #self.layers do
+    if y == self.layers[ i ].y then
+      return true
+    end
+  end
+  
+  return false
+end
