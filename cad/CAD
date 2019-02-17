@@ -7,7 +7,7 @@ local build
 local A, B, C, D, E, F = 30, 48, 46, 32, 18, 33
 local S = 31
 local UP, DOWN, RIGHT, LEFT = 200, 208, 203, 205
-local PAGE_UP, PAGE_DOWN = 78, 74
+local PAGE_UP, PAGE_DOWN = 51, 52
 local X = 45
 
 
@@ -49,7 +49,7 @@ end
 function display( layer )
   term.clear()
   for i = 1, #layer.blocks do
-    term.setCursorPos( layer.blocks[i].x - cameraX, layer.blocks[i].z - cameraY )
+    term.setCursorPos( layer.blocks[i].x + cameraX, layer.blocks[i].z + cameraY )
     term.setTextColor( FOREGROUND_COLOR )
     term.setBackgroundColor( BACKGROUND_COLOR )
     term.write( slotToString( layer.blocks[i].slot ) )
@@ -72,7 +72,6 @@ function start()
     local event, button, eventX, eventY = os.pullEvent()
 
     if event == "mouse_click" then
-
       if button == 1 then
         layer:add( { x = eventX - cameraX, z = eventY - cameraY, slot = currentSlot } )
       elseif button == 2 then
