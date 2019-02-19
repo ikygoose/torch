@@ -1,0 +1,24 @@
+turtle.dig()
+turtle.forward()
+ 
+local height = 0
+while turtle.detectUp() do
+    turtle.dig()
+    turtle.turnLeft()
+    turtle.dig()
+    turtle.turnRight()
+    turtle.digUp()
+    turtle.up()
+    height = height + 1
+end
+ 
+turtle.dig()
+turtle.forward()
+turtle.turnLeft()
+turtle.dig()
+turtle.forward()
+ 
+for i = 1, height do
+    turtle.digDown()
+    turtle.down()
+end
