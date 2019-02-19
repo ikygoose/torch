@@ -1,0 +1,61 @@
+local length = tonumber( tArgs[1] )
+local width = tonumber( tArgs[2] )
+local slot = 1
+local turnCondition = 0
+turtle.select(1)
+
+function refuel()
+  while turtle.getFuelLevel() == 0 do
+    for k = 1, 16 do
+      turtle.select( k )
+      turtle.refuel( 1 )
+    end
+    if turtle.getFuelLevel() then
+      print("Refuel!")
+      local event, p1 = os.pullEvent("turtle_inventory")
+    end
+  end
+end
+
+for i = 1, width do
+  for j = 1, length do
+    while turtle.getItemCount( slot ) == 0 do
+      local s = 1
+      
+      while s <= 16 and turtle.getItemCount( slot ) == 0 do
+        slot = ( slot % 16 ) + 1
+        turtle.select( slot )
+      end
+
+      if turtle.getItemCount( slot ) == 0 then
+        print("Add Blocks!")
+        local event, p1 = os.pullEvent("turtle_inventory")
+      end
+
+    end
+
+    turtle.placeDown()
+    while not turtle.forward() do
+      refuel()
+    end
+  end
+  if turnCondition == 0 then
+    turtle.turnRight()
+    turtle.forward()
+    turtle.turnRight()
+    
+    while not turtle.forward() do
+      refuel()
+    end
+    turnCondition = 1
+  else
+    turtle.turnLeft()
+    turtle.forward()
+    turtle.turnLeft()
+    
+    while not turtle.forward() do
+      refuel()
+    end
+    turnCondition = 0
+  end
+end
