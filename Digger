@@ -1,0 +1,53 @@
+local tArgs = {...}
+local distance = tonumber( tArgs[1] )
+local height = tonumber( tArgs[2] )
+
+-- refuel method
+function refuel()
+  while turtle.getFuelLevel() == 0 do
+    for k = 1, 16 do
+      turtle.select( k )
+      turtle.refuel( 1 )
+    end
+    if turtle.getFuelLevel() then
+      print("Refuel!")
+      local event, p1 = os.pullEvent("turtle_inventory")
+    end
+  end
+end
+
+-- removes blocks up, down, in front right and left
+function dig()
+  turtle.dig()
+  turtle.digUp()
+  turtle.digDown()
+  turtle.turnRight()
+  turtle.dig()
+  turtle.turnLeft()
+  turtle.turnLeft()
+  turtle.dig()
+  turtle.turnRight()
+end
+
+-- main function
+function start()
+  for i = 1, distance do
+    for j = 1, height do
+      dig()
+      refuel()
+      turtle.up()
+    end
+    
+    refuel()
+    turtle.dig()
+    turtle.forward()
+    
+    for j = 1, height do
+      dig()
+      refuel()
+      turtle.down()
+    end
+  end
+end
+
+start()
