@@ -43,9 +43,9 @@ function start()
     turtle.forward()
     
     for j = 1, height do
-      dig()
       refuel()
       turtle.down()
+      dig()
     end
 
     refuel()
