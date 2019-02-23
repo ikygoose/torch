@@ -31,7 +31,7 @@ end
 
 -- main function
 function start()
-  for i = 1, round( distance / 2 ) do
+  for i = 1, math.floor( distance / 2 ) do
     for j = 1, height do
       dig()
       refuel()
