@@ -7,6 +7,7 @@
 os.loadAPI("moveAPI.lua")
 
 MAX_COST = 50
+LAST_SLOT = 16
 
 tArgs = {...}
 depth = tonumber(tArgs[1])
@@ -72,16 +73,31 @@ function cordsOf( direction )
     return {x, y, z}
 end
 
-function digShaft( maxCost )
+--- handles the drop off logic, return to the progress depth of the mine
+function dropOff( storageX, storageY, storageZ, shaftX, shaftY, shaftZ, mineX, mineY, mineZ, maxCost )
+    moveAPI.pathTo( mineX, mineY, mineZ, maxCost, nil, collisionCallBack)
+    moveAPI.moveTo( shaftX, shaftY, shaftZ, {moveAPI.Y, moveAPI.X, moveAPI.Z} )
+    moveAPI.pathTo( storageX, storageY, storageZ, maxCost, nil, collisionCallBack)
+    for i = 1,16 do
+        turtle.select(i)
+        turtle.dropUp()
+    end
+    turtle.select(1)
+    moveAPI.pathTo( shaftX, shaftY, shaftZ, maxCost, nil, collisionCallBack)
+    moveAPI.moveTo( mineX, mineY, mineZ, {moveAPI.Y, moveAPI.X, moveAPI.Z} )
+end
+
+--- digs a mineshaft to bedrock from the current location
+function digShaft( storageX, storageY, storageZ, maxCost )
     maxCost = maxCost or MAX_COST
 
-    shaftX = moveAPI.getOrientation().x
-    shaftY = moveAPI.getOrientation().y
-    shaftZ = moveAPI.getOrientation().z
+    local shaftX = moveAPI.getOrientation().x
+    local shaftY = moveAPI.getOrientation().y
+    local shaftZ = moveAPI.getOrientation().z
 
-    dir = moveAPI.getOrientation().direction
+    local dir = moveAPI.getOrientation().direction
 
-    digging = true
+    local digging = true
     while digging do
         if turtle.detectDown() and not turtle.digDown() then
             digging = false
@@ -89,10 +105,12 @@ function digShaft( maxCost )
         if not moveAPI.move(moveAPI.DOWN, 1) then
             digging = false
         end
-        mineX = moveAPI.getOrientation().x
-        mineY = moveAPI.getOrientation().y
-        mineZ = moveAPI.getOrientation().z
-        mine()
+        local mineX = moveAPI.getOrientation().x
+        local mineY = moveAPI.getOrientation().y
+        local mineZ = moveAPI.getOrientation().z
+
+        mine( storageX, storageY, storageZ, shaftX, shaftY, shaftZ, mineX, mineY, mineZ, maxCost )
+
         moveAPI.pathTo( mineX, mineY, mineZ, maxCost, nil, collisionCallBack )
     end
 
@@ -100,10 +118,10 @@ function digShaft( maxCost )
 
 end
 
-function mine( maxCost )
+function mine( storageX, storageY, storageZ, shaftX, shaftY, shaftZ, mineX, mineY, mineZ, maxCost )
     maxCost = maxCost or MAX_COST
 
-    blocks = {{moveAPI.getOrientation().x,moveAPI.getOrientation().y,moveAPI.getOrientation().z}}
+    local blocks = {{moveAPI.getOrientation().x,moveAPI.getOrientation().y,moveAPI.getOrientation().z}}
 
     while #blocks > 0 do
         ore = blocks[1]
@@ -116,12 +134,18 @@ function mine( maxCost )
         if isUp and isOre(up.name) then
             if turtle.digUp() then
                 table.insert(blocks, cordsOf( moveAPI.UP ) )
+                if turtle.getItemCount(LAST_SLOT) > 0 then
+                    dropOff(storageX, storageY, storageZ, shaftX, shaftY, shaftZ, mineX, mineY, mineZ, maxCost )
+                end
             end
         end
 
         if isDown and isOre(down.name) then
             if turtle.digDown() then
                 table.insert(blocks, cordsOf( moveAPI.DOWN ) )
+                if turtle.getItemCount(LAST_SLOT) > 0 then
+                    dropOff(storageX, storageY, storageZ, shaftX, shaftY, shaftZ, mineX, mineY, mineZ, maxCost )
+                end
             end
         end
 
@@ -130,6 +154,11 @@ function mine( maxCost )
             if isFront and isOre(front.name) then
                 if turtle.dig() then
                     table.insert(blocks, cordsOf( moveAPI.FORWARD ) )
+                    if turtle.getItemCount(LAST_SLOT) > 0 then
+                        local dir = moveAPI.getOrientation().direction
+                        dropOff(storageX, storageY, storageZ, shaftX, shaftY, shaftZ, mineX, mineY, mineZ, maxCost )
+                        moveAPI.turn(dir)
+                    end
                 end
             end
             moveAPI.turn( moveAPI.RIGHT )
@@ -140,14 +169,14 @@ end
 
 function findShafts( width, depth )
 
-    x = moveAPI.getOrientation().x
-    y = moveAPI.getOrientation().y
-    z = moveAPI.getOrientation().z
+    local x = moveAPI.getOrientation().x
+    local y = moveAPI.getOrientation().y
+    local z = moveAPI.getOrientation().z
 
-    shafts = {}
-    offsets = {0,2,4,1,3}
-    i = 0
-    j = 0
+    local shafts = {}
+    local offsets = {0,2,4,1,3}
+    local i = 0
+    local j = 0
     while i < depth do
         j = offsets[(i % 5) + 1]
         while j < width do
@@ -161,19 +190,20 @@ end
 
 initBlackList(blackListFile)
 
-mineShaftX = moveAPI.getOrientation().x
-mineShaftY = moveAPI.getOrientation().y
-mineShaftZ = moveAPI.getOrientation().z
+local mineShaftX = moveAPI.getOrientation().x
+local mineShaftY = moveAPI.getOrientation().y
+local mineShaftZ = moveAPI.getOrientation().z
 
-shafts = findShafts(width, depth)
+local shafts = findShafts(width, depth)
 
 for i, shaft in ipairs(shafts) do
     moveAPI.pathTo( shaft[1], shaft[2], shaft[3], MAX_COST, nil, collisionCallBack )
-    digShaft()
+    digShaft(mineShaftX, mineShaftY, mineShaftZ, MAX_COST )
     moveAPI.pathTo( mineShaftX, mineShaftY, mineShaftZ, MAX_COST, nil, collisionCallBack )
 
     for i = 1,16 do
         turtle.select(i)
         turtle.dropUp()
     end
+    turtle.select(1)
 end
