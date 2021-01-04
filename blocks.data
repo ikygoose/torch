@@ -1,0 +1,12 @@
+{
+    [1] = "minecraft:dirt",
+    [2] = "minecraft:grass",
+    [3] = "minecraft:stone",
+    [4] = "minecraft:gravel",
+    [5] = "minecraft:snow",
+    [6] = "quark:biome_cobblestone",
+    [7] = "rustic:slate",
+    [8] = "minecraft:cobblestone",
+    [9] = "quark:slate",
+    [10] = "minecraft:sand",
+}
