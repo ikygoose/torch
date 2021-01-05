@@ -8,14 +8,14 @@ os.loadAPI("moveAPI.lua")
 
 local tArgs = {...}
 
-local depth = tArgs[1]
-local width = tArgs[2]
-local height = tArgs[3]
+local depth = tonumber(tArgs[1])
+local width = tonumber(tArgs[2])
+local height = tonumber(tArgs[3])
 
 local slot = 1
 
 local function placeDepth()
-    for d in 1, depth do
+    for d = 1, depth do
         selectItem()
         turtle.placeDown()
         moveAPI.move( moveAPI.FORWARD, 1)
@@ -23,7 +23,7 @@ local function placeDepth()
 end
 
 local function placeWidth()
-    for w in 1, width do
+    for w = 1, width do
         selectItem()
         turtle.placeDown()
         moveAPI.move( moveAPI.FORWARD, 1)
@@ -46,7 +46,7 @@ local function selectItem()
     end
 end
 
-for h in 1, height do
+for h  = 1, height do
     moveAPI.move(moveAPI.UP, 1)
     placeDepth()
     moveAPI.turn(moveAPI.RIGHT)
