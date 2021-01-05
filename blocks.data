@@ -9,4 +9,6 @@
     [8] = "minecraft:cobblestone",
     [9] = "quark:slate",
     [10] = "minecraft:sand",
+    [11] = "projectred-exploration:stone",
+    [12] = "quark:marble",
 }
