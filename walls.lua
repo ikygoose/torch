@@ -8,13 +8,13 @@ os.loadAPI("moveAPI.lua")
 
 local tArgs = {...}
 
-local depth = tonumber(tArgs[1])
-local width = tonumber(tArgs[2])
+local depth = tonumber(tArgs[1]) - 1
+local width = tonumber(tArgs[2]) - 1
 local height = tonumber(tArgs[3])
 
 local slot = 1
 
-local function placeDepth()
+function placeDepth()
     for d = 1, depth do
         selectItem()
         turtle.placeDown()
@@ -22,7 +22,7 @@ local function placeDepth()
     end
 end
 
-local function placeWidth()
+function placeWidth()
     for w = 1, width do
         selectItem()
         turtle.placeDown()
@@ -30,7 +30,7 @@ local function placeWidth()
     end
 end
 
-local function selectItem()
+function selectItem()
     while turtle.getItemCount( slot ) == 0 do
         local s = 1
 
